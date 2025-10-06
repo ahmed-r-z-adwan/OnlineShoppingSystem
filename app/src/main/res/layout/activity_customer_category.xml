@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    tools:context=".CustomerCategoryActivity">
+
+    <!-- Logo صغير -->
+    <ImageView
+        android:id="@+id/imgLogo"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:src="@drawable/shop"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="12dp"
+        android:contentDescription="App Logo" />
+
+    <!-- ProgressBar بالنص -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+    <!-- RecyclerView للكاتيجوري -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerCategories"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/imgLogo"
+        android:padding="8dp"
+        android:clipToPadding="false"
+        android:layout_marginTop="8dp"
+        tools:listitem="@layout/item_category_customer" />
+
+    <!-- زر الكارت -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnCart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="16dp"
+        android:contentDescription="View Cart"
+        app:srcCompat="@android:drawable/ic_menu_view"
+        app:tint="@android:color/white"
+        app:backgroundTint="@color/purple_500" />
+
+</RelativeLayout>

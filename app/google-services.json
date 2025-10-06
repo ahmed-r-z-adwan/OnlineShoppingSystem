@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "387336863871",
+    "firebase_url": "https://coffee-spark-sample-app-6cd23-default-rtdb.firebaseio.com",
+    "project_id": "coffee-spark-sample-app-6cd23",
+    "storage_bucket": "coffee-spark-sample-app-6cd23.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:387336863871:android:2504f55ff01c165328bf4a",
+        "android_client_info": {
+          "package_name": "com.example.onlineshoppingsystem"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMnckAP-t_x64HYtAZ48FW_8STACPFHfk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

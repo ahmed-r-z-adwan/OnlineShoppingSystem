@@ -1,0 +1,45 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="8dp"
+    android:background="@android:color/white"
+    tools:context=".CustomerProductListActivity">
+
+    <!-- محتوى الشاشة -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- مربع البحث -->
+        <EditText
+            android:id="@+id/etSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Search products..."
+            android:drawableLeft="@android:drawable/ic_menu_search"
+            android:drawablePadding="8dp"
+            android:padding="10dp"
+            android:layout_marginBottom="8dp"
+            android:background="@android:drawable/edit_text"
+            android:inputType="text" />
+
+        <!-- قائمة المنتجات -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerCustomerProducts"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/item_product_customer" />
+    </LinearLayout>
+
+    <!-- ProgressBar بالنص -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+</RelativeLayout>
