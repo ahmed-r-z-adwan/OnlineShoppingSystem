@@ -1,61 +1,125 @@
 {
-  "//": [
-    "Realtime Database rules for this app. Deploy with:  firebase deploy --only database",
-    "",
-    "The app decides what a user may do by reading users/$uid/role in LoginActivity and",
-    "showing the admin screens when it says 'admin'. That check lives on the client, so",
-    "it is a convenience, not a control: anyone holding the app's config can talk to the",
-    "database directly and never run that code. These rules are where the actual limits",
-    "are, and they mirror the client's intent on the server side.",
-    "",
-    "Note the shape of the users rule. There is deliberately no .write at the $uid level,",
-    "because a granted write cascades to every child below it — one blanket rule there",
-    "would let any signed-in user set their own role to 'admin'. Permissions are granted",
-    "field by field instead, and role can only be set to 'customer', once, at sign-up."
-  ],
-
   "rules": {
     ".read": false,
     ".write": false,
-
     "users": {
       "$uid": {
         ".read": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('role').val() === 'admin')",
-
-        "name":  { ".write": "auth != null && auth.uid === $uid" },
-        "email": { ".write": "auth != null && auth.uid === $uid" },
-
-        "role": {
-          ".write": "auth != null && ((auth.uid === $uid && !data.exists() && newData.val() === 'customer') || root.child('users').child(auth.uid).child('role').val() === 'admin')",
-          ".validate": "newData.isString() && (newData.val() === 'customer' || newData.val() === 'admin')"
+        ".write": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('role').val() === 'admin')",
+        ".validate": "newData.hasChildren(['uid', 'name', 'email', 'role'])",
+        "uid": {
+          ".validate": "newData.val() === $uid"
         },
-
-        "$other": { ".validate": false }
+        "name": {
+          ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 80"
+        },
+        "email": {
+          ".validate": "newData.isString() && newData.val().length <= 120"
+        },
+        "role": {
+          ".validate": "newData.val() === 'customer' || root.child('users').child(auth.uid).child('role').val() === 'admin'"
+        },
+        "$other": {
+          ".validate": false
+        }
       }
     },
-
     "categories": {
       ".read": "auth != null",
-      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'"
-    },
-
-    "products": {
-      ".read": "auth != null",
-      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'"
-    },
-
-    "carts": {
-      "$uid": {
-        ".read":  "auth != null && auth.uid === $uid",
-        ".write": "auth != null && auth.uid === $uid"
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
+      "$categoryId": {
+        ".validate": "newData.hasChildren(['id', 'name'])",
+        "id": {
+          ".validate": "newData.val() === $categoryId"
+        },
+        "name": {
+          ".validate": "newData.isString() && newData.val().length > 0"
+        },
+        "imageBase64": {
+          ".validate": "newData.isString() && newData.val().length <= 8000000"
+        },
+        "$other": {
+          ".validate": false
+        }
       }
     },
-
+    "products": {
+      ".read": "auth != null",
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
+      "$productId": {
+        ".validate": "newData.hasChildren(['id', 'name', 'price'])",
+        "id": {
+          ".validate": "newData.val() === $productId"
+        },
+        "categoryId": {
+          ".validate": "newData.isString()"
+        },
+        "categoryName": {
+          ".validate": "newData.isString()"
+        },
+        "name": {
+          ".validate": "newData.isString() && newData.val().length > 0"
+        },
+        "description": {
+          ".validate": "newData.isString()"
+        },
+        "imageBase64": {
+          ".validate": "newData.isString() && newData.val().length <= 8000000"
+        },
+        "price": {
+          ".validate": "newData.isNumber() && newData.val() >= 0"
+        },
+        "rate": {
+          ".validate": "newData.isNumber()"
+        },
+        "location": {
+          ".validate": "newData.isString()"
+        },
+        "$other": {
+          ".validate": false
+        }
+      }
+    },
+    "carts": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid",
+        "$itemId": {
+          "userId": {
+            ".validate": "newData.val() === $uid"
+          },
+          "price": {
+            ".validate": "newData.isNumber() && newData.val() >= 0"
+          },
+          "quantity": {
+            ".validate": "newData.isNumber() && newData.val() > 0"
+          }
+        }
+      }
+    },
     "orders": {
-      "$orderId": {
-        ".read": "auth != null && (data.child('userId').val() === auth.uid || root.child('users').child(auth.uid).child('role').val() === 'admin')",
-        ".write": "auth != null && ((!data.exists() && newData.child('userId').val() === auth.uid) || root.child('users').child(auth.uid).child('role').val() === 'admin')",
-        "userId": { ".validate": "newData.isString()" }
+      ".read": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid",
+        "$orderId": {
+          ".validate": "newData.hasChildren(['userId', 'totalAmount', 'status', 'timestamp'])",
+          "userId": {
+            ".validate": "newData.val() === $uid"
+          },
+          "totalAmount": {
+            ".validate": "newData.isNumber() && newData.val() >= 0"
+          },
+          "status": {
+            ".validate": "newData.isString()"
+          },
+          "timestamp": {
+            ".validate": "newData.isNumber()"
+          },
+          "$other": {
+            ".validate": false
+          }
+        }
       }
     }
   }
